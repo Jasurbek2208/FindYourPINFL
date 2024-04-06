@@ -202,7 +202,6 @@
                 });
 
                 const data = await res.json();
-                console.log(data)
                 return data.data;
             } catch(err) {
                 console.log(err);
@@ -222,7 +221,7 @@
             document.getElementById("specialPinResult").innerText = docInfo.personalNum;
             document.getElementById("docname").innerText = docInfo.docName;
             document.getElementById("firstname").innerText = docInfo.firstName;
-            document.getElementById("lastname").innerText = docInfo.lastName;
+            document.getElementById("lastname").innerText = docInfo.surName;
             document.getElementById("middlename").innerText = docInfo.middleName;
             document.getElementById("jinsi").innerText = docInfo.sex === 1 ? "Erkak": "Ayol";
             document.getElementById("shahar").innerText = docInfo.ns10Name.name_uz_cyrl;
