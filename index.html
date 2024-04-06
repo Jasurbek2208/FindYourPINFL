@@ -3,34 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Special Passport PINFL</title>
+    <title>Find your Passport PINFL</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+            text-align: left;
+            width: 100%;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        input[type="button"] {
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        img {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: auto;
+            height: 50px;
+        }
+        #captchaGroup {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        #captchaResult {
+            width: 80px;
+            height: 50px;
+            margin-bottom: 0px;
+        }
+        #getCaptchaBtn {
+            padding: 8px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            height: 50px;
+        }
+        #getCaptchaBtn:hover {
+            background-color: #0056b3;
+        }
+        #specialPinResult {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        #generatePinflBtn {
+            padding: 8px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            height: 60px;
+        }
+        #generatePinflBtn:hover {
+            background-color: #0056b3;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>Generate Special Passport PINFL</h1>
-    <form id="generatePassportForm">
-        <label for="series">Passport Series:</label>
-        <input type="text" id="series" name="series" required><br><br>
-        <label for="number">Passport Number:</label>
-        <input type="text" id="number" name="number" required><br><br>
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required><br><br>
-        <label for="captchaImg">Captcha Image (Dec nums):</label><br>
-        <img src="" id="captchaImg" alt="Captcha Image"><br><br>
-        <label for="captchaResult">Captcha Image Result Number:</label>
-        <input type="number" id="captchaResult" name="captchaResult" required><br><br>
-        <button type="button" id="getCaptchaBtn">Get Captcha</button><br><br>
-        <button type="submit">Generate Special PINFL</button>
-    </form>
-    <div id="specialPinResult"></div>
+    <div class="container">
+        <h1>Find your Passport PINFL</h1>
+        <form id="generatePassportForm">
+            <label for="passport">Passport Series:</label>
+            <input type="text" id="passport" name="passport" placeholder="Passport Series" required>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" placeholder="Date of Birth" required>
+            <div id="captchaGroup">
+                <img src="" id="captchaImg" alt="Captcha Image">
+                <input type="number" id="captchaResult" name="captchaResult" placeholder="Result Number" required>
+                <button type="button" id="getCaptchaBtn">Reload Captcha</button>
+            </div>
+            <button type="submit" id="generatePinflBtn">Find PINFL</button>
+        </form>
+        <div id="specialPinResultModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h1 id="docname"></h1>
+                <p>
+                    <b>Ism: </b><span id="firstname"></span>
+                </p>
+                <p>
+                    <b>Familiya: </b><span id="lastname"></span>
+                </p>
+                <p>
+                    <b>Sharf: </b><span id="middlename"></span>
+                </p>
+                <p>
+                    <b>Jinsi: </b><span id="jinsi"></span>
+                </p>
+                <p>
+                    <b>Shahar: </b><span id="shahar"></span>
+                </p>
+                <p>
+                    <b>Tuman: </b><span id="tuman"></span>
+                </p>
+                <h5><b style="font-size: 17px;">JSHSHR: </b><span id="specialPinResult"></span></h5>
+            </div>
+        </div>
+    </div>
 
     <script>
-        let captchaId
+        let captchaId;
 
         async function getCaptcha() {
             try {
                 const res = await fetch("https://clients.ahost.uz/index.php?m=authorization&action=main/captcha", {
                     method: "GET"
-                })
+                });
                 const data = await res.json();
                 captchaId = data.captchaId;
                 const captchaImageBase64 = data.captchaImageBase64;
@@ -40,25 +188,22 @@
             }
         }
 
-        async function getUserPINFL(series, number, dob, captchaResult) {
+        async function getUserPINFL(series, dob, captchaResult) {
             try {
-                const formData = new FormData()
-                formData.append('passnumber', series + number);
-        formData.append('datebirth', dob);
-        formData.append('captcha_id', captchaId);
-        formData.append('captcha', captchaResult);
-                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent("https://clients.ahost.uz/index.php?m=authorization&action=main/getPinfl")}`, {
+                const formData = new FormData();
+                formData.append('passnumber', series);
+                formData.append('datebirth', dob);
+                formData.append('captcha_id', captchaId);
+                formData.append('captcha', captchaResult);
+
+                const res = await fetch("https://corsproxy.io/?https://clients.ahost.uz/index.php?m=authorization&action=main/getPinfl", {
                     method: "POST",
-                  //  headers: {
-                      //  "Content-Type": "application/json",
-                      //  "Cookie": "allureNavCollapse=active; WHMCSsqtl4hicSxva=lfa47c54ifhh7f4gkcjfdlfbjq",
-            //    "Referer": "https://clients.ahost.uz/register.php"
-               //     },
                     body: formData
                 });
+
                 const data = await res.json();
                 console.log(data)
-                return data.data.personalNum;
+                return data.data;
             } catch(err) {
                 console.log(err);
             }
@@ -70,13 +215,35 @@
 
         document.getElementById("generatePassportForm").addEventListener("submit", async function(event) {
             event.preventDefault(); // Prevent form submission
-            let series = document.getElementById("series").value;
-            let number = document.getElementById("number").value;
+            let series = document.getElementById("passport").value;
             let dob = document.getElementById("dob").value;
-            let captchaResult = document.getElementById("captchaResult").value; 
-            let specialPinFL = await getUserPINFL(series, number, dob, captchaResult);
-            document.getElementById("specialPinResult").innerText = "Generated Special Passport PINFL: " + specialPinFL;
+            let captchaResult = document.getElementById("captchaResult").value;
+            let docInfo = await getUserPINFL(series, dob, captchaResult);
+            document.getElementById("specialPinResult").innerText = docInfo.personalNum;
+            document.getElementById("docname").innerText = docInfo.docName;
+            document.getElementById("firstname").innerText = docInfo.firstName;
+            document.getElementById("lastname").innerText = docInfo.lastName;
+            document.getElementById("middlename").innerText = docInfo.middleName;
+            document.getElementById("jinsi").innerText = docInfo.sex === 1 ? "Erkak": "Ayol";
+            document.getElementById("shahar").innerText = docInfo.ns10Name.name_uz_cyrl;
+            document.getElementById("tuman").innerText = docInfo.ns11Name.name_uz_cyrl;
+            document.getElementById("specialPinResultModal").style.display = "block";
         });
+
+        // Close the modal when the close button or outside the modal is clicked
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("specialPinResultModal")) {
+                document.getElementById("specialPinResultModal").style.display = "none";
+            }
+        }
+
+        // Close the modal when the close button is clicked
+        document.getElementsByClassName("close")[0].onclick = function() {
+            document.getElementById("specialPinResultModal").style.display = "none";
+        };
+
+        // Initial captcha load
+        getCaptcha();
     </script>
 </body>
 </html>
